@@ -1,0 +1,40 @@
+version: '3.9'
+
+
+services:
+  ms_flask_users:
+    container_name: ms_flask_users
+    build: .
+    ports:
+    - 5000:5000
+    volumes:
+    - ./:/app
+    environment:
+    - FLASK_ENV=development
+    depends_on:
+    - ms_db_users
+    networks:
+    - usersMsNet
+
+  ms_db_users:
+    container_name: ms_db_users
+    image: postgres
+    ports:
+    - 5432:5432
+    volumes:
+    - msUsersVol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ms_users
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: secret
+    networks:
+    - usersMsNet
+
+volumes:
+  msUsersVol:
+    driver: local
+
+networks:
+  usersMsNet:
+    driver: "bridge"
+
